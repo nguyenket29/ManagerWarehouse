@@ -19,7 +19,38 @@ public class UserEntity extends BaseEntity {
     @Column(name = "position")
     private String position;
 
+    @Column(name = "active")
+    private boolean active;
+
+    @Column(name = "token")
+    private String token;
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
     public UserEntity() {
+    }
+
+    public UserEntity(String token) {
+        this.token = token;
+    }
+
+    public UserEntity(String password, String token) {
+        this.password = password;
+        this.token = token;
     }
 
     public UserEntity(String username, String password, String email,

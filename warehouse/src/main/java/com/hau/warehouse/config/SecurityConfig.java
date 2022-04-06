@@ -1,13 +1,14 @@
 package com.hau.warehouse.config;
 
-import com.hau.warehouse.exception.AuthenticationException;
+import com.hau.warehouse.exception.AuthEntryPointJwt;
 import com.hau.warehouse.security.jwt.JwtUtils;
 import com.hau.warehouse.security.jwt.TokenFilter;
-import com.hau.warehouse.security.service.CustomUserDetailService;
+import com.hau.warehouse.security.service.impl.CustomUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,21 +19,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
-//@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final CustomUserDetailService customUserDetailsService;
 
-    private final AuthenticationException unauthorizedHandler;
+    private final AuthEntryPointJwt unauthorizedHandler;
 
     private final JwtUtils jwtUtils;
 
-    private final CustomUserDetailService userDetailService;
     public SecurityConfig(CustomUserDetailService customUserDetailsService,
-                          AuthenticationException unauthorizedHandler, JwtUtils jwtUtils, CustomUserDetailService userDetailService) {
+                          AuthEntryPointJwt unauthorizedHandler, JwtUtils jwtUtils) {
         this.customUserDetailsService = customUserDetailsService;
         this.unauthorizedHandler = unauthorizedHandler;
         this.jwtUtils = jwtUtils;
-        this.userDetailService = userDetailService;
     }
 
     @Bean
@@ -56,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/pages/**").permitAll()
                 .anyRequest().authenticated();
 
-        http.addFilter(new TokenFilter(this.authenticationManager(), jwtUtils, userDetailService));
+        http.addFilter(new TokenFilter(this.authenticationManager(), jwtUtils, customUserDetailsService));
     }
 
     @Override

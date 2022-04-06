@@ -1,6 +1,6 @@
 package com.hau.warehouse.security.jwt;
 
-import com.hau.warehouse.security.service.CustomUserDetailService;
+import com.hau.warehouse.security.service.impl.CustomUserDetailService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.AuthenticationManager;

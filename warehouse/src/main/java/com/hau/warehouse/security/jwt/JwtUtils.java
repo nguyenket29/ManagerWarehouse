@@ -1,6 +1,6 @@
 package com.hau.warehouse.security.jwt;
 
-import com.hau.warehouse.security.UserCustom;
+import com.hau.warehouse.security.service.UserCustom;
 import io.jsonwebtoken.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,12 +22,14 @@ public class JwtUtils {
 
     public String generateJwtToken(Authentication authentication) {
         UserCustom userPrincipal = (UserCustom) authentication.getPrincipal();
-        return Jwts.builder()
+        JwtBuilder builder = Jwts.builder()
                 .setSubject((userPrincipal.getUsername()))
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpiration))
-                .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .compact();
+                .signWith(SignatureAlgorithm.HS512, jwtSecret);
+
+        String token = builder.compact();
+        return token;
     }
 
     public String generateTokenFromUsername(String username) {
@@ -39,6 +41,7 @@ public class JwtUtils {
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(token).getBody().getSubject();
     }
+
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);

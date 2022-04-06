@@ -1,5 +1,6 @@
 package com.hau.warehouse.service;
 
+import com.hau.warehouse.entity.UserEntity;
 import com.hau.warehouse.payload.request.LoginRequest;
 import com.hau.warehouse.payload.request.TokenRefreshRequest;
 import com.hau.warehouse.payload.request.UserRequest;
@@ -9,4 +10,6 @@ public interface IUserService {
     ResponseEntity<?> login(LoginRequest request);
     ResponseEntity<?> register(UserRequest userRequest);
     ResponseEntity<?> TokenRefresh(TokenRefreshRequest tokenRequest);
+    ResponseEntity<?> resetPassword(UserEntity user);
+    ResponseEntity<?> forgotPassword(String email, String url);
 }
